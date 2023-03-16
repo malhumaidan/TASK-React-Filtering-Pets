@@ -1,8 +1,29 @@
+import { useState } from "react";
 import pets from "../petsData";
 import PetItem from "./PetItem";
 
 function PetsList() {
-  const petList = pets.map((pet) => <PetItem pet={pet} key={pet.id} />);
+  const [input, setInput] = useState('');
+
+  const [type, setType] = useState("");
+
+  const petList = pets.filter(pet => pet.name.toLowerCase().includes(input.toLowerCase()))
+                      .filter(pet => {
+                        if (type === ""){
+                          return true
+                        }
+                        return pet.type === type})
+                       .map((pet) => <PetItem pet={pet} key={pet.id} />);
+
+  function handleChangeInput(e) {
+    setInput(e.target.value);
+    // console.log(e);
+  }
+
+function handleChangeType(e) {
+  setType(e.target.value);
+}
+
 
   return (
     <section id="doctors" className="doctor-section pt-140">
@@ -15,6 +36,8 @@ function PetsList() {
               </h1>
               <div className="input-group rounded">
                 <input
+                  onChange={handleChangeInput}
+                  value={input}
                   type="search"
                   className="form-control rounded"
                   placeholder="Search"
@@ -24,13 +47,13 @@ function PetsList() {
               </div>
               <br />
               Type:
-              <select className="form-select">
+              <select className="form-select" onChange={handleChangeType} value={type}>
                 <option value="" selected>
                   All
                 </option>
-                <option value="Cat">Cat</option>
-                <option value="Dog">Dog</option>
-                <option value="Rabbit">Rabbit</option>
+                <option value="Cat" >Cat</option>
+                <option value="Dog" >Dog</option>
+                <option value="Rabbit" >Rabbit</option>
               </select>
             </div>
           </div>
